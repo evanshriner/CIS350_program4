@@ -13,11 +13,14 @@ struct CageCondition
 {
 	char operation;
 	int total;
+	vector<vector<int>> includedBlocks;
+	
 };
 
 class KenPuzzle
 {
 public:
+
 	int puzzleSize;
 	int numOfCages;
 	int*** puzzle;
@@ -29,6 +32,8 @@ public:
 		numOfCages = n;
 
 		puzzle = initPuzzle();
+		setBlockTypes();
+		setCageConditions();
 	}
 
 	int*** initPuzzle()
@@ -55,7 +60,41 @@ public:
 		return temp;
 	}
 
-	
+	void setBlockTypes()
+	{
+		char type;
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			for (int j = 0; j < puzzleSize; j++)
+			{
+				cin >> type;
+				puzzle[i][j][1] = 0;
+				puzzle[i][j][1] = (int)type - 97;
+			}
+		}
+	}
+
+	void setCageConditions()
+	{
+		for (int i = 0; i < numOfCages; i++)
+		{
+			CageCondition temp;
+			cin >> temp.total >> temp.operation;
+			cages.push_back(temp);
+		}
+
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			for (int j = 0; j < puzzleSize; j++)
+			{
+				vector<int> temp;
+				temp.push_back(i);
+				temp.push_back(j);
+
+				cages[puzzle[i][j][1]].includedBlocks.push_back(temp);
+			}
+		}
+	}
 };
 
 
@@ -65,10 +104,28 @@ int main()
 	cin >> size >> cages;
 	KenPuzzle p1(size, cages);
 
+
+	// to access 
+
+	// out put table
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			cout << p1.puzzle[i][j][0] << " ";
+		}
+		cout << endl;
+	}
+
+	system("pause");
+	return 0;
 }
 
 
 /*
 input the two numbers
 make the grid from pointer
+
+put function inside init that takes the rest of the input
+and makes the entire puzzle
 */
