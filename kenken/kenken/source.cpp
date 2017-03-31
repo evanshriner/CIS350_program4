@@ -8,21 +8,22 @@ hello
 
 using namespace std;
 
-struct cageCondition
+// http://www.geeksforgeeks.org/backtracking-set-7-suduku/
+struct CageCondition
 {
 	char operation;
 	int total;
 };
 
-class kenPuzzle
+class KenPuzzle
 {
 public:
 	int puzzleSize;
 	int numOfCages;
 	int*** puzzle;
-	vector<cageCondition> cages;
+	vector<CageCondition> cages;
 
-	kenPuzzle(int p, int n)
+	KenPuzzle(int p, int n)
 	{
 		puzzleSize = p;
 		numOfCages = n;
@@ -42,12 +43,27 @@ public:
 				temp[i][j] = new int[2];
 			}
 		}
+
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			for (int j = 0; j < puzzleSize; j++)
+			{
+				temp[i][j][0] = 0; // unassigned value
+			}
+		}
+
+		return temp;
 	}
+
+	
 };
 
 
 int main()
 {
+	int size, cages;
+	cin >> size >> cages;
+	KenPuzzle p1(size, cages);
 
 }
 
