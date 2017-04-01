@@ -104,9 +104,6 @@ int main()
 	cin >> size >> cages;
 	KenPuzzle p1(size, cages);
 
-
-	// to access 
-
 	// out put table
 	for (int i = 0; i < size; i++)
 	{
