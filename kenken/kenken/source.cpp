@@ -19,22 +19,7 @@ struct CageCondition
 
 class KenPuzzle
 {
-public:
-
-	int puzzleSize;
-	int numOfCages;
-	int*** puzzle;
-	vector<CageCondition> cages;
-
-	KenPuzzle(int p, int n)
-	{
-		puzzleSize = p;
-		numOfCages = n;
-
-		puzzle = initPuzzle();
-		setBlockTypes();
-		setCageConditions();
-	}
+private:
 
 	int*** initPuzzle()
 	{
@@ -95,6 +80,29 @@ public:
 			}
 		}
 	}
+
+public:
+
+	int puzzleSize;
+	int numOfCages;
+	int*** puzzle;
+	vector<CageCondition> cages;
+
+	KenPuzzle(int p, int n)
+	{
+		puzzleSize = p;
+		numOfCages = n;
+
+		puzzle = initPuzzle();
+		setBlockTypes();
+		setCageConditions();
+	}
+
+	bool SolvePuzzle()
+	{
+
+	}
+	
 };
 
 
