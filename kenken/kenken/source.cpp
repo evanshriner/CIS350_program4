@@ -94,16 +94,6 @@ private:
 		return true;
 	}
 
-	bool numberWorks(int i, int row, int col)
-	{
-		// check if number works with row and col
-		checkPlacement(i, row, col);
-
-		// check if number works with cage
-		checkCage(i, row, col);
-
-	}
-
 	bool checkPlacement(int i, int row, int col)
 	{
 		// check if  i is valid in row
@@ -144,7 +134,7 @@ public:
 
 		for (int i = 1; i <= puzzleSize; i++)
 		{
-			if (numberWorks(i, row, col))
+			if (checkCage(i, row, col) && checkPlacement(i, row, col))
 			{
 				puzzle[row][col][0] = i;
 
