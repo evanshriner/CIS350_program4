@@ -81,6 +81,41 @@ private:
 		}
 	}
 
+	bool puzzleCompleted(int &row, int &col)
+	{
+		for (row = 0; row < puzzleSize; row++)
+		{
+			for (col = 0; col < puzzleSize; col++)
+			{
+				if (puzzle[row][col][0] == 0)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	bool numberWorks(int i, int row, int col)
+	{
+		// check if number works with row and col
+		checkPlacement(i, row, col);
+
+		// check if number works with cage
+		checkCage(i, row, col);
+
+	}
+
+	bool checkPlacement(int i, int row, int col)
+	{
+		// check if  i is valid in row
+
+		//check if i is valid in column
+	}
+
+	bool checkCage(int i, int row, int col)
+	{
+		// check if current cage members work with i
+	}
+
 public:
 
 	int puzzleSize;
@@ -98,9 +133,32 @@ public:
 		setCageConditions();
 	}
 
-	bool SolvePuzzle()
+	bool solvePuzzle()
 	{
+		int row, col;
 
+		if (puzzleCompleted(row,col))
+		{
+			return true;
+		}
+
+		for (int i = 1; i <= puzzleSize; i++)
+		{
+			if (numberWorks(i, row, col))
+			{
+				puzzle[row][col][0] = i;
+
+				if (solvePuzzle())
+				{
+					return true;
+				}
+				else
+				{
+					puzzle[row][col][0] = 0;
+				}
+			}
+		}
+		return false;
 	}
 	
 };
@@ -113,13 +171,20 @@ int main()
 	KenPuzzle p1(size, cages);
 
 	// out put table
-	for (int i = 0; i < size; i++)
+	if (p1.solvePuzzle())
 	{
-		for (int j = 0; j < size; j++)
+		for (int i = 0; i < size; i++)
 		{
-			cout << p1.puzzle[i][j][0] << " ";
+			for (int j = 0; j < size; j++)
+			{
+				cout << p1.puzzle[i][j][0] << " ";
+			}
+			cout << endl;
 		}
-		cout << endl;
+	}
+	else
+	{
+		cout << "no solution";
 	}
 
 	system("pause");
