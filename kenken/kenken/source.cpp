@@ -8,7 +8,6 @@ hello
 
 using namespace std;
 
-// http://www.geeksforgeeks.org/backtracking-set-7-suduku/
 struct CageCondition
 {
 	char operation;
@@ -94,16 +93,104 @@ private:
 		return true;
 	}
 
-	bool checkPlacement(int i, int row, int col)
+	bool checkPlacement(int num, int row, int col)
 	{
 		// check if  i is valid in row
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			if (num == puzzle[row][i][0])
+				return false;
+		}
 
 		//check if i is valid in column
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			if (num == puzzle[i][col][0])
+				return false;
+		}
+
+		return true;
 	}
 
-	bool checkCage(int i, int row, int col)
+	bool checkCage(int num, int row, int col)
 	{
-		// check if current cage members work with i
+		CageCondition* temp = &cages[puzzle[row][col][1]]; // for easier readability
+		vector<int> numbersInCage; // copy of current included blocks array
+		for (int i = 0; i < temp->includedBlocks.size(); i++)
+		{
+			numbersInCage.push_back(puzzle[temp->includedBlocks[i][0]][temp->includedBlocks[i][1]][0]);
+		}
+
+		switch (temp->operation)
+		{
+			int totalAmt;
+			case 'x':
+				totalAmt = 1;
+				for (int i = 0; i < numbersInCage.size(); i++)
+				{
+					if (temp->includedBlocks[i][0] == row && temp->includedBlocks[i][1] == col)
+					{
+						if ((totalAmt *= num) > temp->total)
+							return false;
+					}
+					else if (numbersInCage[i] == 0)
+					{ }
+					else if ((totalAmt *= numbersInCage[i]) > temp->total)
+						return false;
+				}
+				return true;
+			case '/':
+				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
+				{
+					if (numbersInCage[1] != 0 && num != 0)
+					{
+						if (numbersInCage[1] / num != temp->total && num / numbersInCage[1] != temp->total)
+							return false;
+					}
+					return true;
+				}
+				else
+				{
+					if (numbersInCage[0] != 0 && num != 0)
+					{
+						if (numbersInCage[0] / num != temp->total && num / numbersInCage[0] != temp->total)
+							return false;
+					}
+					return true;
+				}
+			case '+':
+				totalAmt = 0;
+				for (int i = 0; i < numbersInCage.size(); i++)
+				{
+					if (temp->includedBlocks[i][0] == row && temp->includedBlocks[i][1] == col)
+					{
+						if ((totalAmt += num) > temp->total)
+							return false;
+					}
+					else if ((totalAmt += numbersInCage[i]) > temp->total)
+							return false;
+				}
+				return true;
+			case '-':
+				
+				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
+				{
+					if (numbersInCage[1] == 0)
+						return true;
+					else if (abs(numbersInCage[1] - num) != temp->total)
+						return false;
+				}
+				else
+				{
+					if (numbersInCage[0] == 0)
+						return true;
+					else if (abs(numbersInCage[0] - num) != temp->total)
+						return false;
+				}
+				return true;
+			default:
+				return false;
+		}
 	}
 
 public:
@@ -150,6 +237,18 @@ public:
 		}
 		return false;
 	}
+
+	void printPuzzle()
+	{
+		for (int i = 0; i < puzzleSize; i++)
+		{
+			for (int j = 0; j < puzzleSize; j++)
+			{
+				cout << puzzle[i][j][0] << " ";
+			}
+			cout << endl;
+		}
+	}
 	
 };
 
@@ -176,16 +275,7 @@ int main()
 	{
 		cout << "no solution";
 	}
-
-	system("pause");
 	return 0;
 }
 
 
-/*
-input the two numbers
-make the grid from pointer
-
-put function inside init that takes the rest of the input
-and makes the entire puzzle
-*/
