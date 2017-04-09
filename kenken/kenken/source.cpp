@@ -13,12 +13,16 @@ struct CageCondition
 	char operation;
 	int total;
 	vector<vector<int>> includedBlocks;
-	
 };
 
 class KenPuzzle
 {
 private:
+
+	int puzzleSize;
+	int numOfCages;
+	int*** puzzle;
+	vector<CageCondition> cages;
 
 	int*** initPuzzle()
 	{
@@ -95,14 +99,12 @@ private:
 
 	bool checkPlacement(int num, int row, int col)
 	{
-		// check if  i is valid in row
 		for (int i = 0; i < puzzleSize; i++)
 		{
 			if (num == puzzle[row][i][0])
 				return false;
 		}
 
-		//check if i is valid in column
 		for (int i = 0; i < puzzleSize; i++)
 		{
 			if (num == puzzle[i][col][0])
@@ -116,6 +118,7 @@ private:
 	{
 		CageCondition* temp = &cages[puzzle[row][col][1]]; // for easier readability
 		vector<int> numbersInCage; // copy of current included blocks array
+
 		for (int i = 0; i < temp->includedBlocks.size(); i++)
 		{
 			if (temp->includedBlocks[i][0] == row && temp->includedBlocks[i][1] == col)
@@ -135,6 +138,7 @@ private:
 		switch (temp->operation)
 		{
 			int totalAmt;
+
 			case 'x':
 				totalAmt = 1;
 				for (int i = 0; i < numbersInCage.size(); i++)
@@ -155,13 +159,13 @@ private:
 			case '/':
 				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
 				{
-						if (numbersInCage[1] / num != temp->total && num / numbersInCage[1] != temp->total)
-							return false;
+					if (numbersInCage[1] / num != temp->total && num / numbersInCage[1] != temp->total)
+						return false;
 				}
 				else
 				{
-						if (numbersInCage[0] / num != temp->total && num / numbersInCage[0] != temp->total)
-							return false;
+					if (numbersInCage[0] / num != temp->total && num / numbersInCage[0] != temp->total)
+						return false;
 				}
 				return true;
 			case '+':
@@ -181,7 +185,6 @@ private:
 				else
 					return false;
 			case '-':
-				
 				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
 				{
 					 if (abs(numbersInCage[1] - num) != temp->total)
@@ -193,17 +196,13 @@ private:
 						return false;
 				}
 				return true;
-			default:
+
+			default: // not a real sign
 				return false;
 		}
 	}
 
 public:
-
-	int puzzleSize;
-	int numOfCages;
-	int*** puzzle;
-	vector<CageCondition> cages;
 
 	KenPuzzle(int p, int n)
 	{
@@ -229,7 +228,6 @@ public:
 			if (checkCage(i, row, col) && checkPlacement(i, row, col))
 			{
 				puzzle[row][col][0] = i;
-				//printPuzzle();
 
 				if (solvePuzzle())
 				{
@@ -257,7 +255,6 @@ public:
 	}
 	
 };
-
 
 int main()
 {
