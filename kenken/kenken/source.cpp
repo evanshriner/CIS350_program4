@@ -118,7 +118,18 @@ private:
 		vector<int> numbersInCage; // copy of current included blocks array
 		for (int i = 0; i < temp->includedBlocks.size(); i++)
 		{
-			numbersInCage.push_back(puzzle[temp->includedBlocks[i][0]][temp->includedBlocks[i][1]][0]);
+			if (temp->includedBlocks[i][0] == row && temp->includedBlocks[i][1] == col)
+			{
+				numbersInCage.push_back(puzzle[temp->includedBlocks[i][0]][temp->includedBlocks[i][1]][0]);
+			}
+			else if (puzzle[temp->includedBlocks[i][0]][temp->includedBlocks[i][1]][0] == 0)
+			{
+				return true;
+			}
+			else
+			{
+				numbersInCage.push_back(puzzle[temp->includedBlocks[i][0]][temp->includedBlocks[i][1]][0]);
+			}
 		}
 
 		switch (temp->operation)
@@ -133,31 +144,26 @@ private:
 						if ((totalAmt *= num) > temp->total)
 							return false;
 					}
-					else if (numbersInCage[i] == 0)
-					{ }
 					else if ((totalAmt *= numbersInCage[i]) > temp->total)
 						return false;
+
 				}
-				return true;
+				if (totalAmt == temp->total)
+					return true;
+				else
+					return false;
 			case '/':
 				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
 				{
-					if (numbersInCage[1] != 0 && num != 0)
-					{
 						if (numbersInCage[1] / num != temp->total && num / numbersInCage[1] != temp->total)
 							return false;
-					}
-					return true;
 				}
 				else
 				{
-					if (numbersInCage[0] != 0 && num != 0)
-					{
 						if (numbersInCage[0] / num != temp->total && num / numbersInCage[0] != temp->total)
 							return false;
-					}
-					return true;
 				}
+				return true;
 			case '+':
 				totalAmt = 0;
 				for (int i = 0; i < numbersInCage.size(); i++)
@@ -170,21 +176,20 @@ private:
 					else if ((totalAmt += numbersInCage[i]) > temp->total)
 							return false;
 				}
-				return true;
+				if (totalAmt == temp->total)
+					return true;
+				else
+					return false;
 			case '-':
 				
 				if (temp->includedBlocks[0][0] == row && temp->includedBlocks[0][1] == col)
 				{
-					if (numbersInCage[1] == 0)
-						return true;
-					else if (abs(numbersInCage[1] - num) != temp->total)
+					 if (abs(numbersInCage[1] - num) != temp->total)
 						return false;
 				}
 				else
 				{
-					if (numbersInCage[0] == 0)
-						return true;
-					else if (abs(numbersInCage[0] - num) != temp->total)
+					if (abs(numbersInCage[0] - num) != temp->total)
 						return false;
 				}
 				return true;
@@ -224,6 +229,7 @@ public:
 			if (checkCage(i, row, col) && checkPlacement(i, row, col))
 			{
 				puzzle[row][col][0] = i;
+				//printPuzzle();
 
 				if (solvePuzzle())
 				{
@@ -259,22 +265,15 @@ int main()
 	cin >> size >> cages;
 	KenPuzzle p1(size, cages);
 
-	// out put table
 	if (p1.solvePuzzle())
 	{
-		for (int i = 0; i < size; i++)
-		{
-			for (int j = 0; j < size; j++)
-			{
-				cout << p1.puzzle[i][j][0] << " ";
-			}
-			cout << endl;
-		}
+		p1.printPuzzle();
 	}
 	else
 	{
 		cout << "no solution";
 	}
+	//system("pause");
 	return 0;
 }
 
